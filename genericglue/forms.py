@@ -1,6 +1,6 @@
 from django import forms
 from django.conf import settings
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes import admin as generic_admin
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import MultipleObjectsReturned
 from django.core.exceptions import ObjectDoesNotExist
@@ -18,7 +18,8 @@ class ContentTypeChoiceIterator(object):
     """
     def __init__(self, queryset=ContentType.objects.all()):
         self.queryset = queryset
-        self.ctype_choices = [(ctype.id, "%s | %s" % (ctype.app_label, ctype.model)) for ctype in self.queryset.order_by('app_label', 'model')]
+        #self.ctype_choices = [(ctype.id, "%s | %s" % (ctype.app_label, ctype.model)) for ctype in self.queryset.order_by('app_label', 'model')]
+        self.ctype_choices = []
 
     def __iter__(self):
         yield (u"", u"---------") # initial empty choice
@@ -120,7 +121,7 @@ class GenericForeignKeyField(forms.MultiValueField):
         return (ctype, object_id)
 
 
-class GenericglueInlineModelAdmin(generic.GenericInlineModelAdmin):
+class GenericglueInlineModelAdmin(generic_admin.GenericInlineModelAdmin):
     ct_field = "parent_type"
     ct_fk_field = "parent_id"
 
