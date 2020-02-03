@@ -16,10 +16,10 @@ class ContentTypeChoiceIterator(object):
     ContentTypes.
 
     """
-    def __init__(self, queryset=ContentType.objects.all()):
-        self.queryset = queryset
-        #self.ctype_choices = [(ctype.id, "%s | %s" % (ctype.app_label, ctype.model)) for ctype in self.queryset.order_by('app_label', 'model')]
-        self.ctype_choices = []
+    def __init__(self, queryset=None):
+        self.queryset = queryset or ContentType.objects.all()
+        self.ctype_choices = [(ctype.id, "%s | %s" % (ctype.app_label, ctype.model)) for ctype in self.queryset.order_by('app_label', 'model')]
+        #self.ctype_choices = []
 
     def __iter__(self):
         yield (u"", u"---------") # initial empty choice
@@ -95,7 +95,8 @@ class GenericForeignKeyField(forms.MultiValueField):
     represented by that combination.
 
     """
-    def __init__(self, queryset=ContentType.objects.all(), *args, **kwargs):
+    def __init__(self, queryset=None, *args, **kwargs):
+        queryset = queryset or ContentType.objects.all()
         super(GenericForeignKeyField, self).__init__(fields=(forms.ModelChoiceField(queryset=queryset),
                                                              forms.IntegerField()), widget=GenericForeignKeyWidget(queryset=queryset), *args, **kwargs)
 
